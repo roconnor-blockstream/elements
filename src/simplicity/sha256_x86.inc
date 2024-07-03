@@ -1,3 +1,4 @@
+#include <stdio.h>
 #if defined(__SHA__) && defined(__SSE4_1__) && (defined(__x86_64__) || defined(__amd64__) || defined(__i386__))
 
 #include <cpuid.h>
@@ -30,6 +31,7 @@ static bool cpu_has_sha_ni(void) {
 static void sha256_compression_x86_sha_ni(uint32_t* midstate, const uint32_t* block) {
   __m128i msg, t1, t2, m0, m1, m2, m3, s0, s1, so0, so1;
 
+fprintf(stdout,"SIMPLICITY OPTIMIZED SHA NI COMPRESSION.\n");
   /* Load state */
   s0 = _mm_loadu_si128((const __m128i*)(midstate + 0));
   s1 = _mm_loadu_si128((const __m128i*)(midstate + 4));
@@ -167,6 +169,7 @@ static void sha256_compression_x86_sha_ni(uint32_t* midstate, const uint32_t* bl
  */
 extern void simplicity_sha256_cpu_optimize_not_thread_safe(void) __attribute__((constructor));
 extern void simplicity_sha256_cpu_optimize_not_thread_safe(void) {
+fprintf(stdout,"SIMPLICITY TESTING SHA NI.\n");
   if (cpu_has_sha_ni()) {
     sha256_compression = sha256_compression_x86_sha_ni;
   }
